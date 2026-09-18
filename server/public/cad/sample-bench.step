@@ -1,0 +1,8 @@
+/* JODHPUR ARTISAN & CAD WORKS - BASNI FACTORY SPECIFICATION */
+/* Model: sample-bench.step */
+/* Timber: Kiln-Seasoned Sheesham / Teak (Moisture 8.4%) */
+/* Machine: 5-Axis CNC Homag Toolpath Compatible */
+/* Tolerance: +/- 0.18 mm */
+HEADER SECTION;
+FILE_DESCRIPTION(('CAD Architectural Furniture Drawing', 'Version 2.4'), '2;1');
+ENDSEC;

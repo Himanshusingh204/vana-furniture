@@ -1,0 +1,12 @@
+ISO-10303-21;
+HEADER;
+FILE_DESCRIPTION(('VANA sample STEP placeholder - Marwar Monolith'),'1');
+FILE_NAME('sample-marwar-monolith.step','2026-09-16',('VANA'),('Basni Atelier'),'','','');
+FILE_SCHEMA(('AUTOMOTIVE_DESIGN'));
+ENDSEC;
+DATA;
+#1=PRODUCT('Marwar Monolith','Marwar Monolith dining table 2400x1000x760mm',$,(#2));
+#2=PRODUCT_CONTEXT('',#3,'mechanical');
+#3=APPLICATION_CONTEXT('configuration controlled 3d designs of mechanical parts and assemblies');
+ENDSEC;
+END-ISO-10303-21;

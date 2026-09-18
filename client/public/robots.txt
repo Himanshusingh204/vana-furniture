@@ -1,0 +1,20 @@
+# Jodhpur Artisan & CAD Works - Robots Directive
+User-agent: *
+Allow: /
+Allow: /catalog
+Allow: /product/
+Allow: /factory
+Allow: /custom-trade
+Allow: /about
+Allow: /care-warranty
+Allow: /track
+Allow: /gallery
+Allow: /contact
+
+# Disallow admin control rooms and internal telemetry endpoints
+Disallow: /admin
+Disallow: /api/
+Disallow: /telemetry/
+
+# Search Engine Sitemap Location
+Sitemap: https://jodhpur-furniture.com/sitemap.xml
