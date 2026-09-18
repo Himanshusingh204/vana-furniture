@@ -41,3 +41,8 @@ Thumbs.db
 # allowlist entries over time, including command strings that can contain
 # secrets typed during a session — never commit it)
 .claude/
+
+# Local AI agent tooling: skill bundles and internal planning/spec docs.
+# Kept on disk for local development reference, not part of the product.
+.opencode/
+docs/superpowers/
