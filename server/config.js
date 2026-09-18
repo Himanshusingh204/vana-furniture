@@ -13,7 +13,7 @@ const DEV_ONLY_JWT_SECRET = 'dev-only-insecure-jwt-secret-do-not-use-in-producti
 // Dev-only bcrypt hash (10 rounds). Provided only so `npm run dev` has a working
 // admin login without any setup. Generate your own with:
 //   node -e "console.log(require('bcryptjs').hashSync('yourPassword', 10))"
-const DEV_ONLY_ADMIN_PASSWORD_HASH = '$2a$10$Q8YL7NBbOqbykAoh8UcqFeDwETY/SfD7MP9NwO.KO6OhbNW45yn3K';
+const DEV_ONLY_ADMIN_PASSWORD_HASH = '$2a$10$n1rpcGWK4mA9kF03463/Ee4NNcRO4FDmW8gpdW2u6kmLwsElz8gwq';
 
 // Fail closed: production must not boot on shipped/default secrets.
 if (isProduction && !process.env.JWT_SECRET) {
@@ -45,7 +45,7 @@ const config = {
   PORT: process.env.PORT || 5000,
   NODE_ENV,
   JWT_SECRET: process.env.JWT_SECRET || DEV_ONLY_JWT_SECRET,
-  ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'atelier@jodhpur-furniture.com',
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'admin@vanafurniture.com',
   // Plaintext ADMIN_PASSWORD fallback removed 2026-09-15 (fail closed — only bcrypt hashes authenticate).
   ADMIN_PASSWORD_HASH: process.env.ADMIN_PASSWORD_HASH || DEV_ONLY_ADMIN_PASSWORD_HASH,
   DB_PATH: path.join(__dirname, 'data', 'furniture_store.json'),

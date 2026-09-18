@@ -140,7 +140,7 @@ Backend configuration lives in `server/config.js` and is overridden by environme
 | `ALLOWED_ORIGINS` | — | Comma-separated CORS whitelist; defaults to a localhost dev whitelist if unset |
 
 > [!IMPORTANT]
-> There is no plaintext admin password fallback. Authentication is bcrypt-hash only and fails closed. Never commit a real `.env` file — it is excluded via `.gitignore`.
+> There is no plaintext admin password fallback. Authentication is bcrypt-hash only and fails closed. Never commit a real `.env` file — it is excluded via `.gitignore`. The dev-only fallback admin login (used only when `ADMIN_EMAIL`/`ADMIN_PASSWORD_HASH` are unset in a non-production environment) is defined in `server/config.js` and `server/data/users.json` — never printed here, since this file is version-controlled.
 
 ## Folder Structure
 
