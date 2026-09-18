@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { formatINR } from '../../utils/formatters';
+import { downloadCsv } from '../../utils/csv';
 import { Download, TrendingUp, Filter } from 'lucide-react';
 
 // Pro analytics: dependency-free SVG charts computed from real records.
@@ -73,17 +74,6 @@ export default function AnalyticsPro({ analytics, orders = [], quotes = [], prod
     const area = pts.length ? `${d} L${pts[pts.length - 1].x.toFixed(1)},${(H - PAD).toFixed(1)} L${pts[0].x.toFixed(1)},${(H - PAD).toFixed(1)} Z` : '';
     return { W, H, PAD, pts, d, area };
   }, [derived]);
-
-  const downloadCsv = (name, rows) => {
-    const csv = rows.map((r) => r.map((c) => `"${String(c ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = name;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
 
   const exportOrders = () => {
     downloadCsv('vana-orders.csv', [

@@ -25,8 +25,9 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [sessionExpired, setSessionExpired] = useState(false);
 
-  const expireSession = useCallback(() => {
+  const clearSession = useCallback(() => {
     setToken('');
     setUser(null);
     try {
@@ -36,6 +37,14 @@ export function AuthProvider({ children }) {
       // storage unavailable (private mode) — in-memory state already cleared
     }
   }, []);
+
+  // Called on a 401/403 from an authenticated request — distinct from a
+  // deliberate logout() so the login screen can show a "session expired"
+  // banner only when the session actually timed out underneath the user.
+  const expireSession = useCallback(() => {
+    clearSession();
+    setSessionExpired(true);
+  }, [clearSession]);
 
   const fetchMe = useCallback(async () => {
     const stored = readInitialToken();
@@ -66,6 +75,7 @@ export function AuthProvider({ children }) {
     async (email, password) => {
       setAuthLoading(true);
       setAuthError('');
+      setSessionExpired(false);
       try {
         // Server returns { token, role, email } (no success envelope).
         const json = await apiPost('/api/auth/login', { email, password });
@@ -99,16 +109,19 @@ export function AuthProvider({ children }) {
   );
 
   const logout = useCallback(() => {
-    expireSession();
+    clearSession();
     setAuthError('');
-  }, [expireSession]);
+    setSessionExpired(false);
+  }, [clearSession]);
 
   const value = {
     token,
     user,
+    role: user?.role || null,
     isAuthenticated: Boolean(token),
     authLoading,
     authError,
+    sessionExpired,
     login,
     logout,
     fetchMe,

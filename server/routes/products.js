@@ -54,6 +54,57 @@ function validateProductEdit(body) {
   return { errors, values: { name, description, price, wood, imageUrl } };
 }
 
+// Optional extended fields the unified ProductEditor form submits on top of
+// the required core fields above. Each is applied only when present/non-empty
+// so a partial multipart submission never clobbers existing data with blanks.
+function parseOptionalProductFields(body) {
+  const out = {};
+  const str = (key) => {
+    const v = body && body[key];
+    if (v === undefined || v === null) return;
+    const trimmed = String(v).trim();
+    if (trimmed) out[key] = trimmed;
+  };
+  const num = (key) => {
+    const v = body && body[key];
+    if (v === undefined || v === null || v === '') return;
+    const n = Number(v);
+    if (Number.isFinite(n)) out[key] = n;
+  };
+  const bool = (key) => {
+    const v = body && body[key];
+    if (v === undefined || v === null || v === '') return;
+    out[key] = v === true || v === 'true';
+  };
+  const json = (key) => {
+    const v = body && body[key];
+    if (v === undefined || v === null || v === '') return;
+    try {
+      const parsed = JSON.parse(v);
+      if (parsed && typeof parsed === 'object') out[key] = parsed;
+    } catch (e) {
+      // ignore malformed JSON field; leave existing value untouched
+    }
+  };
+
+  str('sku');
+  str('collection');
+  str('finish');
+  str('dimensions_display');
+  str('stock_status');
+  str('joinery_details');
+  num('weight_kg');
+  num('trade_price_inr');
+  num('lead_time_weeks');
+  bool('cad_available');
+  bool('featured');
+  json('dimensions_mm');
+  json('cad_files');
+  json('three_config');
+
+  return out;
+}
+
 // Get all products with filters
 router.get('/', (req, res) => {
   try {
@@ -117,13 +168,16 @@ router.put('/:id', requireAuth, requireRole('editor', 'admin'), handleProductUpl
   merged = [...merged, ...uploaded];
   if (values.imageUrl) merged.push(values.imageUrl);
 
+  const extra = parseOptionalProductFields(req.body || {});
+
   try {
     const updated = db.updateProduct(req.params.id, {
       name: values.name,
       description: values.description,
       price_inr: values.price,
       wood_type: values.wood,
-      images: merged
+      images: merged,
+      ...extra
     });
     if (!updated) return res.status(404).json({ error: 'Product not found' });
     events.emit('PRODUCT_UPDATED', { id: updated.id, product: { id: updated.id }, message: `Product ${updated.id} updated` });
