@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Trash2 } from 'lucide-react';
+import { Trash2, UserPlus, Users as UsersIcon } from 'lucide-react';
 import { formatDate } from '../../utils/formatters';
 
 const ROLES = ['admin', 'editor', 'viewer'];
@@ -28,16 +28,37 @@ export default function UsersPanel({ data, loading, error, onCreate, onPatch, on
     }
   };
 
-  if (loading && (!data || data.length === 0)) return <div>Loading…</div>;
-  if (error) return <div>{error}</div>;
+  if (loading && (!data || data.length === 0)) {
+    return (
+      <div className="admin-table-wrapper" aria-hidden="true">
+        <table className="admin-table admin-table-skeleton">
+          <thead>
+            <tr>
+              {['Email', 'Role', 'Status', 'Created', 'Action'].map((h) => <th key={h}>{h}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {[0, 1, 2].map((r) => (
+              <tr key={r}>
+                {Array.from({ length: 5 }).map((_, c) => (
+                  <td key={c}><div className="skeleton skeleton-line" /></td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+  if (error) return <div className="admin-empty-state" role="alert">{error}</div>;
 
   return (
     <div>
       <div className="analytics-pro-card" style={{ marginBottom: '1.25rem' }}>
-        <h3 style={{ marginBottom: '1rem' }}>Add console user</h3>
+        <h3 style={{ marginBottom: '1rem' }}><UserPlus size={15} aria-hidden="true" style={{ display: 'inline', marginRight: '6px', verticalAlign: '-2px' }} />Add console user</h3>
         <form onSubmit={handleCreate}>
           {formError && (
-            <div style={{ padding: '0.6rem 0.8rem', background: 'rgba(248,113,113,0.15)', border: '1px solid var(--danger)', borderRadius: 'var(--radius-sm)', color: 'var(--danger)', fontSize: '0.82rem', marginBottom: '1rem' }}>
+            <div className="admin-feedback danger" role="alert" style={{ marginBottom: '1rem' }}>
               {formError}
             </div>
           )}
@@ -79,7 +100,13 @@ export default function UsersPanel({ data, loading, error, onCreate, onPatch, on
         </form>
       </div>
 
-      {(!data || data.length === 0) && <div style={{ color: 'var(--text-muted)' }}>No users yet.</div>}
+      {(!data || data.length === 0) && (
+        <div className="admin-empty-state">
+          <div className="admin-empty-state-icon"><UsersIcon size={18} aria-hidden="true" /></div>
+          <div className="admin-empty-state-title">No console users yet</div>
+          <div className="admin-empty-state-sub">Add the first teammate above to grant console access.</div>
+        </div>
+      )}
       {data && data.length > 0 && (
         <div className="admin-table-wrapper">
           <table className="admin-table">
@@ -107,11 +134,11 @@ export default function UsersPanel({ data, loading, error, onCreate, onPatch, on
                     </select>
                   </td>
                   <td>
-                    <span className="badge badge-gold" style={{ fontSize: '0.72rem' }}>
+                    <span className={`badge ${u.active === false ? 'badge-neutral' : 'badge-success'}`} style={{ fontSize: '0.72rem' }}>
                       {u.active === false ? 'Inactive' : 'Active'}
                     </span>
                   </td>
-                  <td style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                  <td className="admin-num" style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
                     {u.created_at ? formatDate(u.created_at) : '—'}
                   </td>
                   <td>
@@ -130,7 +157,7 @@ export default function UsersPanel({ data, loading, error, onCreate, onPatch, on
                       style={{ padding: '4px', color: 'var(--danger)' }}
                       title="Delete User"
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={16} aria-hidden="true" />
                     </button>
                   </td>
                 </tr>

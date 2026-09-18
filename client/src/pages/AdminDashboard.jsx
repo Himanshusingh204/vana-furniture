@@ -19,6 +19,7 @@ import {
   Package,
   Layers,
   Lock,
+  LogOut,
   RefreshCw,
   Plus,
   Star,
@@ -421,20 +422,8 @@ export default function AdminDashboard() {
       <div className="section container" style={{ maxWidth: '520px', paddingTop: '5rem' }}>
         <SEO title="Factory Admin Login | VANA" />
         <div className="card-luxury" style={{ textAlign: 'center', padding: '3rem 2.5rem' }}>
-          <div
-            style={{
-              width: '56px',
-              height: '56px',
-              borderRadius: '50%',
-              background: 'var(--accent-gold-subtle)',
-              color: 'var(--accent-gold)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 1.5rem'
-            }}
-          >
-            <Lock size={28} />
+          <div className="admin-login-icon">
+            <Lock size={28} aria-hidden="true" />
           </div>
 
           <h2 style={{ fontSize: '1.8rem', marginBottom: '0.4rem' }}>Basni Operations Console</h2>
@@ -443,18 +432,7 @@ export default function AdminDashboard() {
           </span>
 
           {sessionExpired && (
-            <div
-              style={{
-                padding: '0.6rem 0.8rem',
-                background: 'rgba(251, 191, 36, 0.12)',
-                border: '1px solid var(--warning)',
-                borderRadius: 'var(--radius-sm)',
-                color: 'var(--warning)',
-                fontSize: '0.82rem',
-                marginTop: '1.5rem',
-                textAlign: 'left'
-              }}
-            >
+            <div className="admin-login-alert warning" role="alert">
               Session expired after 1 hour. Please log in again.
             </div>
           )}
@@ -483,17 +461,7 @@ export default function AdminDashboard() {
             </div>
 
             {authError && (
-              <div
-                style={{
-                  padding: '0.6rem 0.8rem',
-                  background: 'rgba(248, 113, 113, 0.15)',
-                  border: '1px solid var(--danger)',
-                  borderRadius: 'var(--radius-sm)',
-                  color: 'var(--danger)',
-                  fontSize: '0.82rem',
-                  marginBottom: '1rem'
-                }}
-              >
+              <div className="admin-login-alert danger" role="alert">
                 {authError}
               </div>
             )}
@@ -546,10 +514,10 @@ export default function AdminDashboard() {
 
           <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
             <button onClick={loadData} className="btn btn-secondary" style={{ padding: '0.6rem 1rem' }} title="Sync Database">
-              <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} /> Refresh Data
+              <RefreshCw size={16} aria-hidden="true" className={refreshing ? 'animate-spin' : ''} /> Refresh Data
             </button>
             <button onClick={logout} className="btn btn-outline" style={{ padding: '0.6rem 1rem' }}>
-              Lock & Log Out
+              <LogOut size={16} aria-hidden="true" /> Lock & Log Out
             </button>
           </div>
         </div>
@@ -565,12 +533,12 @@ export default function AdminDashboard() {
 
         {/* Mutation feedback: user-visible toast/alert (not console-only) */}
         {actionError && (
-          <div role="alert" style={{ marginBottom: '1rem', padding: '0.7rem 1rem', background: 'rgba(248,113,113,0.12)', border: '1px solid var(--danger)', borderRadius: 'var(--radius-sm)', color: 'var(--danger)', fontSize: '0.85rem' }}>
+          <div role="alert" className="admin-feedback danger">
             {actionError}
           </div>
         )}
         {actionOk && (
-          <div role="status" style={{ marginBottom: '1rem', padding: '0.7rem 1rem', background: 'rgba(52,211,153,0.10)', border: '1px solid var(--success)', borderRadius: 'var(--radius-sm)', color: 'var(--success)', fontSize: '0.85rem' }}>
+          <div role="status" className="admin-feedback success">
             {actionOk}
           </div>
         )}
@@ -585,62 +553,78 @@ export default function AdminDashboard() {
         />
 
         {/* Tab Navigation */}
-        <div className="admin-tabs">
+        <div className="admin-tabs" role="tablist" aria-label="Operations console sections">
           <button
             onClick={() => setActiveTab('orders')}
             className={`admin-tab-btn ${activeTab === 'orders' ? 'active' : ''}`}
+            role="tab"
+            aria-selected={activeTab === 'orders'}
           >
-            <Package size={16} style={{ display: 'inline', marginRight: '6px' }} />
+            <Package size={16} aria-hidden="true" />
             Factory Commission Work Orders ({orders.length})
           </button>
           <button
             onClick={() => setActiveTab('quotes')}
             className={`admin-tab-btn ${activeTab === 'quotes' ? 'active' : ''}`}
+            role="tab"
+            aria-selected={activeTab === 'quotes'}
           >
-            <Cpu size={16} style={{ display: 'inline', marginRight: '6px' }} />
+            <Cpu size={16} aria-hidden="true" />
             Custom CAD Blueprint Inquiries ({quotes.length})
           </button>
           <button
             onClick={() => setActiveTab('products')}
             className={`admin-tab-btn ${activeTab === 'products' ? 'active' : ''}`}
+            role="tab"
+            aria-selected={activeTab === 'products'}
           >
-            <Layers size={16} style={{ display: 'inline', marginRight: '6px' }} />
+            <Layers size={16} aria-hidden="true" />
             Catalog & 3D Configs ({products.length})
           </button>
           <button
             onClick={() => setActiveTab('reviews')}
             className={`admin-tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
+            role="tab"
+            aria-selected={activeTab === 'reviews'}
           >
-            <Star size={16} style={{ display: 'inline', marginRight: '6px' }} />
+            <Star size={16} aria-hidden="true" />
             Reviews ({reviews.length})
           </button>
           <button
             onClick={() => setActiveTab('newsletter')}
             className={`admin-tab-btn ${activeTab === 'newsletter' ? 'active' : ''}`}
+            role="tab"
+            aria-selected={activeTab === 'newsletter'}
           >
-            <Mail size={16} style={{ display: 'inline', marginRight: '6px' }} />
+            <Mail size={16} aria-hidden="true" />
             Newsletter ({subscribers.length})
           </button>
           <button
             onClick={() => setActiveTab('payments')}
             className={`admin-tab-btn ${activeTab === 'payments' ? 'active' : ''}`}
+            role="tab"
+            aria-selected={activeTab === 'payments'}
           >
-            <CreditCard size={16} style={{ display: 'inline', marginRight: '6px' }} />
+            <CreditCard size={16} aria-hidden="true" />
             Payments ({payments.length})
           </button>
           <button
             onClick={() => setActiveTab('security')}
             className={`admin-tab-btn ${activeTab === 'security' ? 'active' : ''}`}
+            role="tab"
+            aria-selected={activeTab === 'security'}
           >
-            <ShieldCheck size={16} style={{ display: 'inline', marginRight: '6px' }} />
+            <ShieldCheck size={16} aria-hidden="true" />
             Security & Telemetry Logs ({auditLogs.length})
           </button>
           {isAdmin && (
             <button
               onClick={() => setActiveTab('users')}
               className={`admin-tab-btn ${activeTab === 'users' ? 'active' : ''}`}
+              role="tab"
+              aria-selected={activeTab === 'users'}
             >
-              <Users size={16} style={{ display: 'inline', marginRight: '6px' }} />
+              <Users size={16} aria-hidden="true" />
               Users ({users.length})
             </button>
           )}
@@ -648,24 +632,28 @@ export default function AdminDashboard() {
 
         {/* TAB 1: ORDERS */}
         {activeTab === 'orders' && (
-          <OrdersPanel data={orders} loading={refreshing} error={resourceErrors.orders || ''} onStageChange={updateOrderStage} />
+          <div className="admin-tab-content" role="tabpanel" key="orders">
+            <OrdersPanel data={orders} loading={refreshing} error={resourceErrors.orders || ''} onStageChange={updateOrderStage} />
+          </div>
         )}
 
         {/* TAB 2: CUSTOM CAD BLUEPRINTS & INQUIRIES */}
         {activeTab === 'quotes' && (
-          <QuotesPanel data={quotes} loading={refreshing} error={resourceErrors.quotes || ''} onStatusChange={updateQuoteStatus} />
+          <div className="admin-tab-content" role="tabpanel" key="quotes">
+            <QuotesPanel data={quotes} loading={refreshing} error={resourceErrors.quotes || ''} onStatusChange={updateQuoteStatus} />
+          </div>
         )}
 
         {/* TAB 3: PRODUCTS & 3D CONFIGS */}
         {activeTab === 'products' && (
-          <div>
+          <div className="admin-tab-content" role="tabpanel" key="products">
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1.25rem' }}>
               <button
                 onClick={() => setShowNewProdModal(true)}
                 className="btn btn-primary"
                 style={{ padding: '0.6rem 1.25rem' }}
               >
-                <Plus size={16} /> Add Architectural Piece
+                <Plus size={16} aria-hidden="true" /> Add Architectural Piece
               </button>
             </div>
 
@@ -681,27 +669,37 @@ export default function AdminDashboard() {
 
         {/* TAB 4: REVIEWS MODERATION */}
         {activeTab === 'reviews' && (
-          <ReviewsPanel data={reviews} loading={refreshing} error={resourceErrors.reviews || ''} onModerate={moderateReview} onDelete={deleteReview} />
+          <div className="admin-tab-content" role="tabpanel" key="reviews">
+            <ReviewsPanel data={reviews} loading={refreshing} error={resourceErrors.reviews || ''} onModerate={moderateReview} onDelete={deleteReview} />
+          </div>
         )}
 
         {/* TAB 5: NEWSLETTER SUBSCRIBERS */}
         {activeTab === 'newsletter' && (
-          <NewsletterPanel data={subscribers} loading={refreshing} error={resourceErrors.newsletter || ''} />
+          <div className="admin-tab-content" role="tabpanel" key="newsletter">
+            <NewsletterPanel data={subscribers} loading={refreshing} error={resourceErrors.newsletter || ''} />
+          </div>
         )}
 
         {/* TAB 6: PAYMENT LEDGER (TEST MODE) */}
         {activeTab === 'payments' && (
-          <PaymentsPanel data={payments} loading={refreshing} error={resourceErrors.payments || ''} />
+          <div className="admin-tab-content" role="tabpanel" key="payments">
+            <PaymentsPanel data={payments} loading={refreshing} error={resourceErrors.payments || ''} />
+          </div>
         )}
 
         {/* TAB 7: SECURITY AUDIT & ERROR TELEMETRY */}
         {activeTab === 'security' && (
-          <SecurityPanel data={auditLogs} loading={refreshing} error={resourceErrors.logs || ''} />
+          <div className="admin-tab-content" role="tabpanel" key="security">
+            <SecurityPanel data={auditLogs} loading={refreshing} error={resourceErrors.logs || ''} />
+          </div>
         )}
 
         {/* TAB 8: USERS (admin only) */}
         {activeTab === 'users' && isAdmin && (
-          <UsersPanel data={users} loading={refreshing} error={resourceErrors.users || ''} onCreate={createUser} onPatch={patchUser} onDelete={deleteUser} />
+          <div className="admin-tab-content" role="tabpanel" key="users">
+            <UsersPanel data={users} loading={refreshing} error={resourceErrors.users || ''} onCreate={createUser} onPatch={patchUser} onDelete={deleteUser} />
+          </div>
         )}
 
         {/* MODAL: EDIT PRODUCT */}

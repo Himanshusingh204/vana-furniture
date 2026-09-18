@@ -1,8 +1,18 @@
 import React from 'react';
+import { ClipboardList } from 'lucide-react';
 import { formatINR, formatDate } from '../../utils/formatters';
-import { ORDER_STAGES } from '../../utils/shop';
+import { ORDER_STAGES, stageIndex } from '../../utils/shop';
 import { useTableControls } from '../../utils/tableControls';
 import TableToolbar from './TableToolbar';
+
+// Presentational-only stage -> badge tone mapping (position in the fixed
+// manufacturing pipeline, no business logic touched).
+const stageBadgeClass = (stage) => {
+  const i = stageIndex(stage);
+  if (i >= ORDER_STAGES.length - 1) return 'badge badge-success';
+  if (i <= 0) return 'badge badge-info';
+  return 'badge badge-neutral';
+};
 
 const sortValue = (o, key) => {
   if (key === 'created_at') return o.created_at ? new Date(o.created_at).getTime() : 0;
@@ -36,8 +46,40 @@ export default function OrdersPanel({ data, loading, error, onStageChange }) {
   const stages = ORDER_STAGES;
   const controls = useTableControls(data, { getSearchText: searchText, getSortValue: sortValue });
 
-  if (loading && (!data || data.length === 0)) return <div>Loading…</div>;
-  if (error) return <div>{error}</div>;
+  if (loading && (!data || data.length === 0)) {
+    return (
+      <div className="admin-table-wrapper" aria-hidden="true">
+        <table className="admin-table admin-table-skeleton">
+          <thead>
+            <tr>
+              {['Work Order Ref', 'Client / Architect', 'Pieces & Finishes', 'Contract Total', 'Contract Status', 'Manufacturing Stage', 'Action'].map((h) => (
+                <th key={h}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {[0, 1, 2, 3, 4].map((r) => (
+              <tr key={r}>
+                {Array.from({ length: 7 }).map((_, c) => (
+                  <td key={c}><div className="skeleton skeleton-line" /></td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+  if (error) return <div className="admin-empty-state" role="alert">{error}</div>;
+  if (!data || data.length === 0) {
+    return (
+      <div className="admin-empty-state">
+        <div className="admin-empty-state-icon"><ClipboardList size={18} aria-hidden="true" /></div>
+        <div className="admin-empty-state-title">No work orders yet</div>
+        <div className="admin-empty-state-sub">Factory commission orders appear here as soon as a client checks out.</div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -85,12 +127,12 @@ export default function OrdersPanel({ data, loading, error, onStageChange }) {
                     </div>
                   ))}
                 </td>
-                <td style={{ fontWeight: 600 }}>{formatINR(o.total_inr)}</td>
+                <td className="admin-num" style={{ fontWeight: 600 }}>{formatINR(o.total_inr)}</td>
                 <td style={{ color: 'var(--accent-gold)' }}>
                   {o.payment_status || 'Factory Commission'}
                 </td>
                 <td>
-                  <span className="badge badge-gold" style={{ fontSize: '0.72rem' }}>
+                  <span className={stageBadgeClass(o.manufacturing_stage)} style={{ fontSize: '0.72rem' }}>
                     {o.manufacturing_stage}
                   </span>
                 </td>

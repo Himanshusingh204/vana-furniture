@@ -6,25 +6,25 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 0;
+  padding: var(--space-lg) 0;
   border-bottom: 1px solid var(--border-subtle);
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-xl);
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--space-md);
 }
 
 .admin-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.25rem;
-  margin-bottom: 2.5rem;
+  gap: var(--space-md);
+  margin: var(--space-sm) 0 var(--space-2xl);
 }
 
 .admin-stat-card {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 1.5rem;
+  padding: var(--space-lg);
   position: relative;
   overflow: hidden;
   transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
@@ -41,7 +41,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 4px;
+  width: 3px;
   height: 100%;
   background: var(--border-medium);
   transition: background var(--transition-normal);
@@ -57,12 +57,25 @@
 .admin-stat-card.blue::before { background: var(--border-medium); }
 .admin-stat-card.purple::before { background: var(--text-secondary); }
 
+.admin-stat-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-gold-subtle);
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+
 .admin-stat-val {
   font-size: 1.85rem;
   font-weight: 400;
   font-family: var(--font-serif);
   color: var(--text-primary);
   margin: 0.4rem 0;
+  font-variant-numeric: tabular-nums;
 }
 
 .admin-stat-label {
@@ -72,17 +85,26 @@
   color: var(--text-secondary);
 }
 
+.admin-stat-foot {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: var(--space-2xs);
+}
+
 .admin-tabs {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--space-2xs);
   border-bottom: 1px solid var(--border-subtle);
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-lg);
   overflow-x: auto;
 }
 
 .admin-tab-btn {
-  padding: 0.75rem 1.25rem;
-  font-size: 0.88rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: var(--space-sm) var(--space-md);
+  font-size: 0.85rem;
   font-weight: 500;
   color: var(--text-secondary);
   border-bottom: 2px solid transparent;
@@ -90,14 +112,84 @@
   white-space: nowrap;
 }
 
+.admin-tab-btn svg {
+  flex-shrink: 0;
+  opacity: 0.75;
+  transition: opacity var(--transition-fast);
+}
+
 .admin-tab-btn:hover {
   color: var(--text-primary);
   background: var(--bg-secondary);
 }
 
+.admin-tab-btn:hover svg,
+.admin-tab-btn.active svg {
+  opacity: 1;
+}
+
+.admin-tab-btn:active {
+  transform: scale(0.98);
+}
+
+.admin-tab-btn:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: -2px;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
 .admin-tab-btn.active {
   color: var(--text-primary);
   border-bottom-color: var(--text-primary);
+  font-weight: 600;
+}
+
+.admin-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.admin-toolbar-search {
+  position: relative;
+  max-width: 300px;
+  flex: 1 1 220px;
+  display: flex;
+  align-items: center;
+}
+
+.admin-toolbar-search svg {
+  position: absolute;
+  left: 0.85rem;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.admin-toolbar-search .input-luxury {
+  padding-left: 2.4rem;
+}
+
+.admin-toolbar-pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.btn-icon:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  border-color: var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.btn-icon:disabled:hover {
+  border-color: var(--border-subtle);
+  color: var(--text-secondary);
 }
 
 .admin-table-wrapper {
@@ -105,34 +197,72 @@
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
+  position: relative;
+  /* Mobile scroll affordance: a soft fade on the trailing edge hints that
+     the table keeps going, so a bare cut-off column doesn't read as broken. */
+  background-image:
+    linear-gradient(to right, var(--bg-card) 30%, transparent),
+    linear-gradient(to left, var(--bg-card) 30%, transparent),
+    linear-gradient(to right, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0)),
+    linear-gradient(to left, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0));
+  background-position: left, right, left, right;
+  background-repeat: no-repeat;
+  background-size: 24px 100%, 24px 100%, 10px 100%, 10px 100%;
+  background-attachment: local, local, scroll, scroll;
 }
 
 .admin-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 0.88rem;
+  font-size: 0.86rem;
 }
 
 .admin-table th {
-  padding: 1rem 1.25rem;
+  padding: var(--space-sm) var(--space-md);
   background: var(--bg-tertiary);
   color: var(--text-secondary);
   font-weight: 600;
   text-transform: uppercase;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   letter-spacing: 0.05em;
   border-bottom: 1px solid var(--border-medium);
 }
 
+.admin-table th[onclick] {
+  transition: color var(--transition-fast);
+}
+
+.admin-table th[onclick]:hover {
+  color: var(--text-primary);
+}
+
+.admin-table th[onclick]:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: -2px;
+}
+
 .admin-table td {
-  padding: 1rem 1.25rem;
+  padding: var(--space-sm) var(--space-md);
   border-bottom: 1px solid var(--border-subtle);
   vertical-align: middle;
 }
 
+.admin-table tbody tr {
+  transition: background-color var(--transition-fast);
+}
+
 .admin-table tr:hover td {
   background: var(--bg-secondary);
+}
+
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Numeric / price columns — tabular figures so digits line up vertically. */
+.admin-num {
+  font-variant-numeric: tabular-nums;
 }
 
 .admin-audit-stream {
@@ -160,8 +290,9 @@
   background: var(--bg-card);
 }
 
-.admin-audit-entry.WARNING { color: var(--accent-gold); font-weight: 500; }
+.admin-audit-entry.WARNING { color: var(--warning); font-weight: 500; }
 .admin-audit-entry.ERROR { color: var(--danger); font-weight: 500; }
+.admin-audit-entry.INFO { color: var(--text-secondary); }
 
 .admin-audit-entry {
   animation: slideInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -199,4 +330,192 @@
 /* Admin tab content transitions */
 .admin-tab-content {
   animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ==========================================================================
+   SKELETON LOADING STATES
+   Shape-matched placeholders (stat cards, table rows) instead of a bare
+   "Loading…" string. Pulses via opacity only; respects prefers-reduced-motion
+   through the global rule in index.css.
+   ========================================================================== */
+.skeleton {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  animation: skeletonPulse 1.6s ease-in-out infinite;
+}
+
+.skeleton-line {
+  height: 0.85rem;
+  width: 100%;
+  margin-bottom: var(--space-xs);
+}
+
+.skeleton-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.admin-skeleton-card::before {
+  background: var(--border-subtle);
+}
+
+.admin-table-skeleton td {
+  padding: var(--space-sm) var(--space-md);
+}
+
+.admin-table-skeleton .skeleton-line {
+  margin-bottom: 0;
+}
+
+/* ==========================================================================
+   EMPTY STATES
+   On-brand copy in place of a blank panel or a lone text line.
+   ========================================================================== */
+.admin-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2xs);
+  padding: var(--space-2xl) var(--space-lg);
+  background: var(--bg-card);
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+}
+
+.admin-empty-state-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  margin-bottom: var(--space-xs);
+}
+
+.admin-empty-state-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.admin-empty-state-sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  max-width: 46ch;
+}
+
+/* Panel intro copy line, used above tables/lists across every tab. */
+.admin-panel-note {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+}
+
+/* Row-level list item used by Newsletter / Payments (funnel-row reuse) */
+.admin-list-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+}
+
+/* ==========================================================================
+   LOGIN SCREEN
+   ========================================================================== */
+.admin-login-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent-gold-subtle);
+  color: var(--accent-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-lg);
+}
+
+.admin-login-alert {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  text-align: left;
+}
+
+.admin-login-alert.warning {
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid var(--warning);
+  color: var(--warning);
+  margin-top: var(--space-lg);
+}
+
+.admin-login-alert.danger {
+  background: rgba(248, 113, 113, 0.15);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  margin-bottom: var(--space-md);
+}
+
+/* Mutation feedback banners (success / error) shown under the header */
+.admin-feedback {
+  margin-bottom: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.admin-feedback.danger {
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+}
+
+.admin-feedback.success {
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid var(--success);
+  color: var(--success);
+}
+
+/* ==========================================================================
+   RESPONSIVE — 375px phones stay usable: tighter padding, smaller type,
+   tables keep the horizontal-scroll pattern already used above (with a
+   visible edge fade) rather than switching to a second, inconsistent
+   card-stack pattern.
+   ========================================================================== */
+@media (max-width: 640px) {
+  .admin-header {
+    padding: var(--space-md) 0;
+  }
+
+  .admin-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .admin-stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+  }
+
+  .admin-stat-card {
+    padding: var(--space-md);
+  }
+
+  .admin-stat-val {
+    font-size: 1.35rem;
+  }
+
+  .admin-tab-btn {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.8rem;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.8rem;
+  }
 }

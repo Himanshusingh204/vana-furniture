@@ -1,8 +1,17 @@
 import React from 'react';
-import { Trash2, Edit } from 'lucide-react';
+import { Trash2, Edit, PackageSearch } from 'lucide-react';
 import { formatINR } from '../../utils/formatters';
 import { useTableControls } from '../../utils/tableControls';
 import TableToolbar from './TableToolbar';
+
+// Presentational-only status -> badge tone mapping (no data/logic change).
+const STOCK_TONE = {
+  'In Stock': 'badge-success',
+  'Made-to-Order': 'badge-info',
+  Backordered: 'badge-warning',
+  Discontinued: 'badge-danger'
+};
+const stockBadgeClass = (status) => `badge ${STOCK_TONE[status] || 'badge-neutral'}`;
 
 const sortValue = (p, key) => {
   if (key === 'price_inr') return p.price_inr || 0;
@@ -29,9 +38,40 @@ function SortHeader({ label, sortKeyName, controls }) {
 export default function ProductTable({ products, onEdit, onDelete, loading, error }) {
   const controls = useTableControls(products, { getSearchText: searchText, getSortValue: sortValue });
 
-  if (loading && (!products || products.length === 0)) return <div>Loading…</div>;
-  if (error) return <div>{error}</div>;
-  if (!products || products.length === 0) return <div>No products yet.</div>;
+  if (loading && (!products || products.length === 0)) {
+    return (
+      <div className="admin-table-wrapper" aria-hidden="true">
+        <table className="admin-table admin-table-skeleton">
+          <thead>
+            <tr>
+              {['SKU', 'Name', 'Collection', 'Timber Species', 'Price', 'Lead Time', 'Stock Status', '3D Model', 'Action'].map((h) => (
+                <th key={h}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {[0, 1, 2, 3, 4].map((r) => (
+              <tr key={r}>
+                {Array.from({ length: 9 }).map((_, c) => (
+                  <td key={c}><div className="skeleton skeleton-line" /></td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+  if (error) return <div className="admin-empty-state" role="alert">{error}</div>;
+  if (!products || products.length === 0) {
+    return (
+      <div className="admin-empty-state">
+        <div className="admin-empty-state-icon"><PackageSearch size={18} aria-hidden="true" /></div>
+        <div className="admin-empty-state-title">No pieces in the catalog yet</div>
+        <div className="admin-empty-state-sub">Add an architectural piece to start populating the factory catalog and 3D configurator.</div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -75,10 +115,10 @@ export default function ProductTable({ products, onEdit, onDelete, loading, erro
                 </td>
                 <td>{p.collection}</td>
                 <td>{p.wood_type}</td>
-                <td style={{ color: 'var(--accent-gold)', fontWeight: 600 }}>{formatINR(p.price_inr)}</td>
-                <td>{p.lead_time_weeks} Weeks</td>
+                <td className="admin-num" style={{ color: 'var(--accent-gold)', fontWeight: 600 }}>{formatINR(p.price_inr)}</td>
+                <td className="admin-num">{p.lead_time_weeks} Weeks</td>
                 <td>
-                  <span className="badge badge-gold" style={{ fontSize: '0.72rem' }}>
+                  <span className={stockBadgeClass(p.stock_status)} style={{ fontSize: '0.72rem' }}>
                     {p.stock_status || 'Unknown'}
                   </span>
                 </td>
@@ -94,7 +134,7 @@ export default function ProductTable({ products, onEdit, onDelete, loading, erro
                     style={{ padding: '4px', marginRight: '4px' }}
                     title="Edit Product"
                   >
-                    <Edit size={16} />
+                    <Edit size={16} aria-hidden="true" />
                   </button>
                   <button
                     onClick={() => onDelete && onDelete(p.id)}
@@ -102,7 +142,7 @@ export default function ProductTable({ products, onEdit, onDelete, loading, erro
                     style={{ padding: '4px', color: 'var(--danger)' }}
                     title="Remove Product"
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={16} aria-hidden="true" />
                   </button>
                 </td>
               </tr>

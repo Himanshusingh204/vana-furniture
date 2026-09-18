@@ -1,9 +1,18 @@
 import React from 'react';
-import { Download } from 'lucide-react';
+import { Download, FileSearch } from 'lucide-react';
 import { formatINR, formatDate } from '../../utils/formatters';
 import { QUOTE_STATUSES } from '../../utils/shop';
 import { useTableControls } from '../../utils/tableControls';
 import TableToolbar from './TableToolbar';
+
+// Presentational-only status -> badge tone mapping (position in the fixed
+// quote triage pipeline, no business logic touched).
+const quoteBadgeClass = (status) => {
+  const i = QUOTE_STATUSES.indexOf(status);
+  if (i === QUOTE_STATUSES.length - 1) return 'badge badge-success';
+  if (i <= 0) return 'badge badge-info';
+  return 'badge badge-neutral';
+};
 
 const sortValue = (q, key) => {
   if (key === 'created_at') return q.created_at ? new Date(q.created_at).getTime() : 0;
@@ -35,8 +44,40 @@ export default function QuotesPanel({ data, loading, error, onStatusChange }) {
   const quoteStatuses = QUOTE_STATUSES;
   const controls = useTableControls(data, { getSearchText: searchText, getSortValue: sortValue });
 
-  if (loading && (!data || data.length === 0)) return <div>Loading…</div>;
-  if (error) return <div>{error}</div>;
+  if (loading && (!data || data.length === 0)) {
+    return (
+      <div className="admin-table-wrapper" aria-hidden="true">
+        <table className="admin-table admin-table-skeleton">
+          <thead>
+            <tr>
+              {['Quote Ref', 'Architect / Studio', 'Hardwood & Specs', 'Est. Budget', 'Attached CAD Asset', 'Current Status', 'Advance Phase'].map((h) => (
+                <th key={h}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {[0, 1, 2, 3, 4].map((r) => (
+              <tr key={r}>
+                {Array.from({ length: 7 }).map((_, c) => (
+                  <td key={c}><div className="skeleton skeleton-line" /></td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+  if (error) return <div className="admin-empty-state" role="alert">{error}</div>;
+  if (!data || data.length === 0) {
+    return (
+      <div className="admin-empty-state">
+        <div className="admin-empty-state-icon"><FileSearch size={18} aria-hidden="true" /></div>
+        <div className="admin-empty-state-title">No CAD inquiries yet</div>
+        <div className="admin-empty-state-sub">Custom blueprint requests submitted from the site will show up here for engineering review.</div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -91,7 +132,7 @@ export default function QuotesPanel({ data, loading, error, onStatusChange }) {
                     </div>
                   )}
                 </td>
-                <td style={{ fontWeight: 600 }}>{formatINR(q.estimated_budget_inr)}</td>
+                <td className="admin-num" style={{ fontWeight: 600 }}>{formatINR(q.estimated_budget_inr)}</td>
                 <td>
                   {q.cad_file_path || q.cad_file_name ? (
                     <a
@@ -100,14 +141,14 @@ export default function QuotesPanel({ data, loading, error, onStatusChange }) {
                       className="btn btn-secondary"
                       style={{ padding: '0.35rem 0.65rem', fontSize: '0.75rem' }}
                     >
-                      <Download size={14} /> {q.cad_file_name || 'Download CAD'}
+                      <Download size={14} aria-hidden="true" /> {q.cad_file_name || 'Download CAD'}
                     </a>
                   ) : (
                     <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>No CAD attached</span>
                   )}
                 </td>
                 <td>
-                  <span className="badge badge-gold" style={{ fontSize: '0.72rem' }}>
+                  <span className={quoteBadgeClass(q.status)} style={{ fontSize: '0.72rem' }}>
                     {q.status}
                   </span>
                 </td>

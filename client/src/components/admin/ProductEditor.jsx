@@ -218,7 +218,7 @@ export default function ProductEditor({ product, onSaved, onCancel, token }) {
   return (
     <form onSubmit={handleSubmit}>
       {errors.form && (
-        <div style={{ padding: '0.6rem 0.8rem', background: 'rgba(248,113,113,0.15)', border: '1px solid var(--danger)', borderRadius: 'var(--radius-sm)', color: 'var(--danger)', fontSize: '0.82rem', marginBottom: '1rem' }}>
+        <div className="admin-feedback danger" role="alert" style={{ marginBottom: '1rem' }}>
           {errors.form}
         </div>
       )}

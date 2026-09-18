@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { formatINR } from '../../utils/formatters';
 import { downloadCsv } from '../../utils/csv';
-import { Download, TrendingUp, Filter } from 'lucide-react';
+import { Download, TrendingUp, Filter, BarChart3 } from 'lucide-react';
 
 // Pro analytics: dependency-free SVG charts computed from real records.
 // Props: analytics (extended backend payload), orders, quotes, products, activeVisitors.
@@ -100,6 +100,13 @@ export default function AnalyticsPro({ analytics, orders = [], quotes = [], prod
 
   return (
     <section aria-label="Professional business analytics">
+      <div className="analytics-pro-section-head">
+        <div>
+          <span className="eyebrow">Detailed analytics</span>
+          <h2><BarChart3 size={17} aria-hidden="true" style={{ display: 'inline', marginRight: '8px', verticalAlign: '-3px' }} />Business performance breakdown</h2>
+        </div>
+        <span className="analytics-pro-section-note">Same source data as the overview, broken out by metric</span>
+      </div>
       <div className="analytics-kpi6">
         {kpis.map((k) => (
           <div key={k.label} className="analytics-kpi">
@@ -112,7 +119,7 @@ export default function AnalyticsPro({ analytics, orders = [], quotes = [], prod
 
       <div className="analytics-pro-grid">
         <div className="analytics-pro-card">
-          <h3><TrendingUp size={15} style={{ display: 'inline', marginRight: '6px' }} />Revenue trend · last 6 months</h3>
+          <h3><TrendingUp size={15} aria-hidden="true" style={{ display: 'inline', marginRight: '6px' }} />Revenue trend · last 6 months</h3>
           <div className="analytics-pro-sub">Real order totals bucketed by created month. No mock data.</div>
           {line.pts.length ? (
             <svg viewBox={`0 0 ${line.W} ${line.H}`} width="100%" height="180" role="img" aria-label="Revenue trend chart for the last six months">
@@ -141,16 +148,16 @@ export default function AnalyticsPro({ analytics, orders = [], quotes = [], prod
           )}
           <div className="csv-btn-row">
             <button className="btn btn-secondary" style={{ padding: '0.55rem 1rem', fontSize: '0.75rem' }} onClick={exportOrders}>
-              <Download size={14} /> Orders CSV
+              <Download size={14} aria-hidden="true" /> Orders CSV
             </button>
             <button className="btn btn-secondary" style={{ padding: '0.55rem 1rem', fontSize: '0.75rem' }} onClick={exportQuotes}>
-              <Download size={14} /> Quotes CSV
+              <Download size={14} aria-hidden="true" /> Quotes CSV
             </button>
           </div>
         </div>
 
         <div className="analytics-pro-card">
-          <h3><Filter size={15} style={{ display: 'inline', marginRight: '6px' }} />Order stages · live funnel</h3>
+          <h3><Filter size={15} aria-hidden="true" style={{ display: 'inline', marginRight: '6px' }} />Order stages · live funnel</h3>
           <div className="analytics-pro-sub">Manufacturing pipeline distribution from real orders.</div>
           {Object.entries(derived.ordersByStage).map(([stage, count]) => (
             <div key={stage} className="funnel-row">

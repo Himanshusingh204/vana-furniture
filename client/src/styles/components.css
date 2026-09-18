@@ -23,6 +23,23 @@
   transform: scale(0.97);
 }
 
+/* Visible keyboard focus ring on every interactive control — mouse users
+   never see it (focus-visible), keyboard/screen-reader users always do. */
+.btn:focus-visible,
+.btn-icon:focus-visible,
+.btn-ghost:focus-visible,
+.input-luxury:focus-visible,
+.select-luxury:focus-visible,
+.textarea-luxury:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+.btn-icon:active {
+  transform: scale(0.94);
+}
+
 .btn-primary {
   background: var(--accent-gold);
   color: var(--text-inverse);
@@ -405,6 +422,48 @@
   background: rgba(197, 168, 128, 0.06);
   color: var(--text-secondary);
   border-color: var(--border-subtle);
+}
+
+/* Semantic status tones — shared across every admin panel (orders, quotes,
+   reviews, payments) so status pills read as one system instead of ad-hoc
+   inline-styled spans. Monochrome-first: tone comes from the existing
+   status color variables, never a new competing palette. */
+.badge-success {
+  background: rgba(52, 211, 153, 0.1);
+  color: var(--success);
+  border-color: rgba(52, 211, 153, 0.35);
+}
+
+.badge-warning {
+  background: rgba(251, 191, 36, 0.1);
+  color: var(--warning);
+  border-color: rgba(251, 191, 36, 0.35);
+}
+
+.badge-danger {
+  background: rgba(248, 113, 113, 0.1);
+  color: var(--danger);
+  border-color: rgba(248, 113, 113, 0.35);
+}
+
+.badge-info {
+  background: rgba(96, 165, 250, 0.1);
+  color: var(--info);
+  border-color: rgba(96, 165, 250, 0.35);
+}
+
+.badge-neutral {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border-color: var(--border-subtle);
+}
+
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
 }
 
 /* Live status indicator (static, no infinite pulse) */
@@ -2425,23 +2484,52 @@
   background: var(--bg-card);
   padding: 1.4rem;
 }
-.analytics-pro-card h3 { font-size: 0.95rem; margin: 0 0 0.3rem 0; }
+.analytics-pro-card h3 { font-size: 0.95rem; margin: 0 0 0.3rem 0; display: flex; align-items: center; }
 .analytics-pro-sub { font-size: 0.76rem; color: var(--text-secondary); margin-bottom: 1rem; }
+
+/* Section framing so the detailed analytics block reads as a distinct,
+   denser tier below the primary at-a-glance overview cards — same data
+   family, different altitude, not a duplicated block. */
+.analytics-pro-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 2.5rem 0 1rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+}
+.analytics-pro-section-head h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.analytics-pro-section-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
 .analytics-kpi6 {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
 }
 .analytics-kpi {
   border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  background: var(--bg-card);
-  padding: 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  padding: var(--space-sm) var(--space-md);
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
 }
-.analytics-kpi-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
-.analytics-kpi-val { font-size: 1.15rem; font-weight: 700; margin-top: 0.3rem; font-variant-numeric: tabular-nums; }
-.analytics-kpi-hint { font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.2rem; }
+.analytics-kpi:hover {
+  border-color: var(--border-medium);
+  background: var(--bg-tertiary);
+}
+.analytics-kpi-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); }
+.analytics-kpi-val { font-size: 1.05rem; font-weight: 700; margin-top: 0.25rem; font-variant-numeric: tabular-nums; }
+.analytics-kpi-hint { font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.2rem; }
 .funnel-row { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.6rem; font-size: 0.8rem; }
 .funnel-label { width: 150px; flex: 0 0 150px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .funnel-track { flex: 1; height: 10px; border-radius: 9999px; background: var(--bg-tertiary); overflow: hidden; }
