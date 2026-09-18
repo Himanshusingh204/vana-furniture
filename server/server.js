@@ -28,6 +28,7 @@ const wishlistRoutes = require('./routes/wishlist');
 const newsletterRoutes = require('./routes/newsletter');
 const paymentRoutes = require('./routes/payments');
 const privacyRoutes = require('./routes/privacy');
+const userRoutes = require('./routes/users');
 
 const app = express();
 const server = http.createServer(app);
@@ -100,6 +101,7 @@ app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/privacy', privacyRoutes);
+app.use('/api/users', userRoutes);
 
 // Static CAD Samples directory for demonstration CAD downloads
 const cadSamplesDir = path.join(__dirname, 'public', 'cad');

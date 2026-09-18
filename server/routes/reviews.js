@@ -4,6 +4,7 @@ const db = require('../db/database');
 const events = require('../utils/events');
 const wsHub = require('../wsHub');
 const { requireAuth } = require('../middleware/auth');
+const { requireRole } = require('../middleware/requireRole');
 const { reviewLimiter } = require('../middleware/security');
 const { clampRating } = require('../utils/validate');
 
@@ -51,7 +52,7 @@ router.post('/', reviewLimiter, (req, res) => {
 });
 
 // Admin: full list incl. hidden
-router.get('/all', requireAuth, (req, res) => {
+router.get('/all', requireAuth, requireRole('editor', 'admin'), (req, res) => {
   try {
     const list = db.getReviews({});
     res.json({ success: true, count: list.length, data: list });
@@ -61,7 +62,7 @@ router.get('/all', requireAuth, (req, res) => {
 });
 
 // Admin: moderate (approve/hide/feature)
-router.patch('/:id', requireAuth, (req, res) => {
+router.patch('/:id', requireAuth, requireRole('editor', 'admin'), (req, res) => {
   try {
     const updated = db.moderateReview(req.params.id, req.body || {});
     if (!updated) return res.status(404).json({ error: 'Review not found' });
@@ -73,7 +74,7 @@ router.patch('/:id', requireAuth, (req, res) => {
 });
 
 // Admin: delete
-router.delete('/:id', requireAuth, (req, res) => {
+router.delete('/:id', requireAuth, requireRole('editor', 'admin'), (req, res) => {
   try {
     const ok = db.deleteReview(req.params.id);
     if (!ok) return res.status(404).json({ error: 'Review not found' });

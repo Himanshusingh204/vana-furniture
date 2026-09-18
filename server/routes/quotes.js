@@ -6,6 +6,7 @@ const db = require('../db/database');
 const events = require('../utils/events');
 const { quoteUploadLimiter, fileDownloadLimiter } = require('../middleware/security');
 const { requireAuth } = require('../middleware/auth');
+const { requireRole } = require('../middleware/requireRole');
 const { uploadCad, validateMagicBytes } = require('../middleware/upload');
 const config = require('../config');
 const { validateQuoteBody } = require('../utils/validate');
@@ -149,7 +150,7 @@ router.get('/:id', requireAuth, (req, res) => {
 });
 
 // Admin: Update quote status & manufacturing notes
-router.patch('/:id/status', requireAuth, (req, res) => {
+router.patch('/:id/status', requireAuth, requireRole('editor', 'admin'), (req, res) => {
   try {
     const { status, notes } = req.body;
     if (!status) return res.status(400).json({ error: 'Status is required' });
