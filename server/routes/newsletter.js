@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/database');
 const { requireAuth } = require('../middleware/auth');
+const { requireRole } = require('../middleware/requireRole');
 const { newsletterLimiter } = require('../middleware/security');
 
 // Public: subscribe (unique email, validated in db layer)
@@ -18,7 +19,7 @@ router.post('/subscribe', newsletterLimiter, (req, res) => {
 });
 
 // Admin: subscriber list (emails visible to owner only, behind JWT)
-router.get('/', requireAuth, (req, res) => {
+router.get('/', requireAuth, requireRole('editor', 'admin'), (req, res) => {
   try {
     const list = db.getNewsletter();
     res.json({ success: true, count: list.length, data: list });

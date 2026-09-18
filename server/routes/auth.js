@@ -82,6 +82,13 @@ router.post('/login', authLimiter, async (req, res) => {
     return res.status(401).json({ error: 'Invalid administrative credentials' });
   }
 
+  // Deactivated accounts (users.js PATCH active:false) are rejected at login
+  // even with a correct password.
+  if (user.active === false) {
+    db.logAudit('LOGIN_DEACTIVATED_ACCOUNT', `Login attempt for deactivated account: ${email.substring(0, 3)}***`, 'WARNING', clientIp);
+    return res.status(401).json({ error: 'This account has been deactivated' });
+  }
+
   // Verify bcrypt password — fail closed: a corrupted hash denies access, never
   // falls back to plaintext comparison (removed 2026-09-15, see CHANGELOG).
   let isPasswordMatch = false;

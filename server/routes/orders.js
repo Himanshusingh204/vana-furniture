@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require('../db/database');
 const events = require('../utils/events');
 const { requireAuth } = require('../middleware/auth');
+const { requireRole } = require('../middleware/requireRole');
 const { orderLimiter } = require('../middleware/security');
 const { isEmail, isPhone, validateOrderItems } = require('../utils/validate');
 const asyncHandler = require('../utils/asyncHandler');
@@ -164,7 +165,7 @@ router.get('/:id', (req, res) => {
 });
 
 // Admin: Update order manufacturing stage
-router.patch('/:id/stage', requireAuth, asyncHandler(async (req, res) => {
+router.patch('/:id/stage', requireAuth, requireRole('editor', 'admin'), asyncHandler(async (req, res) => {
   try {
     const { stage } = req.body;
     if (!stage) return fail(res, 400, 'Manufacturing stage is required');

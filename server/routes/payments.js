@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require('../db/database');
 const wsHub = require('../wsHub');
 const { requireAuth } = require('../middleware/auth');
+const { requireRole } = require('../middleware/requireRole');
 const { paymentLimiter } = require('../middleware/security');
 const { fail } = require('../utils/respond');
 
@@ -69,7 +70,7 @@ router.post('/confirm', paymentLimiter, (req, res) => {
 });
 
 // Admin: payment ledger
-router.get('/', requireAuth, (req, res) => {
+router.get('/', requireAuth, requireRole('editor', 'admin'), (req, res) => {
   try {
     const list = db.getPayments();
     res.json({ success: true, count: list.length, data: list });
