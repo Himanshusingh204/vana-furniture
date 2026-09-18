@@ -37,12 +37,8 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Local Claude Code permission/session state (accumulates machine-specific
-# allowlist entries over time, including command strings that can contain
-# secrets typed during a session — never commit it)
+# Local editor/tooling config and internal planning notes.
+# Kept on disk for local reference, not part of the shipped product.
 .claude/
-
-# Local AI agent tooling: skill bundles and internal planning/spec docs.
-# Kept on disk for local development reference, not part of the product.
 .opencode/
 docs/superpowers/
