@@ -10,8 +10,10 @@ const isProduction = NODE_ENV === 'production';
 // halts startup rather than silently running with these values.
 // ─────────────────────────────────────────────────────────────────────────
 const DEV_ONLY_JWT_SECRET = 'dev-only-insecure-jwt-secret-do-not-use-in-production';
-// Dev-only bcrypt hash (10 rounds). Provided only so `npm run dev` has a working
-// admin login without any setup. Generate your own with:
+// Dev-only bcrypt hash (10 rounds) for the placeholder password
+// "dev-only-change-me-123". Provided only so `npm run dev` has a working
+// admin login without any setup — never a real credential, so it's safe to
+// commit. Generate your own with:
 //   node -e "console.log(require('bcryptjs').hashSync('yourPassword', 10))"
 const DEV_ONLY_ADMIN_PASSWORD_HASH = '$2a$10$n1rpcGWK4mA9kF03463/Ee4NNcRO4FDmW8gpdW2u6kmLwsElz8gwq';
 

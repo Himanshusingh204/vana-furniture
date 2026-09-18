@@ -36,3 +36,8 @@ Thumbs.db
 # Editor directories
 .vscode/
 .idea/
+
+# Local Claude Code permission/session state (accumulates machine-specific
+# allowlist entries over time, including command strings that can contain
+# secrets typed during a session — never commit it)
+.claude/
